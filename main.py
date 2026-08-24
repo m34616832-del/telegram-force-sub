@@ -12,7 +12,7 @@ from telebot import types
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 CHANNEL_USERNAME = "@LearnEnglilsh"
 CHANNEL_LINK = "https://t.me/LearnEnglilsh"
-EXCLUSIVE_CONTENT_LINK = "https://t.me/-f7N5sFp2Q4wYmRI"
+EXCLUSIVE_CONTENT_LINK = "https://t.me/+-f7N5sFp2Q4wYmRl"
 
 PORT = int(os.getenv("PORT", "8080"))
 
