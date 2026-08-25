@@ -3,16 +3,14 @@
 import os
 import threading
 import traceback
-
 from flask import Flask
 import telebot
 from telebot import types
 
-
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
-CHANNEL_USERNAME = "@LearnEnglilsh"
-CHANNEL_LINK = "https://t.me/LearnEnglilsh"
-EXCLUSIVE_CONTENT_LINK = "https://t.me/+-f7N5sFp2Q4wYmRl"
+CHANNEL_USERNAME = "@LearnEnglish"
+CHANNEL_LINK = "https://t.me/LearnEnglish"
+EXCLUSIVE_CONTENT_LINK = "https://t.me/+F7NSsFp2Q4wMnRl"
 
 PORT = int(os.getenv("PORT", "8080"))
 
@@ -24,21 +22,21 @@ app = Flask(__name__)
 
 
 @app.get("/")
-def health_check() -> tuple[str, int]:
+def health_check():
     return "Telegram bot is running", 200
 
 
-def run_keep_alive_server() -> None:
+def run_keep_alive_server():
     """Run Flask in the background so the process remains reachable."""
     app.run(host="0.0.0.0", port=PORT, debug=False, use_reloader=False)
 
 
-def welcome_keyboard() -> types.InlineKeyboardMarkup:
+def welcome_keyboard():
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     keyboard.add(
         types.InlineKeyboardButton("📢 Join Channel", url=CHANNEL_LINK),
         types.InlineKeyboardButton(
-            "✅ I joined — check again",
+            "✅ I joined - check again",
             callback_data="cb_check",
         ),
     )
@@ -46,26 +44,25 @@ def welcome_keyboard() -> types.InlineKeyboardMarkup:
 
 
 @bot.message_handler(commands=["start"])
-def start_command(message: types.Message) -> None:
+def start_command(message: types.Message):
     bot.send_message(
         message.chat.id,
         "👋 <b>Welcome!</b>\n\n"
         "Please join our channel, then click "
-        "<b>I joined — check again</b>.",
+        "<b>I joined - check again</b>.",
         parse_mode="HTML",
         reply_markup=welcome_keyboard(),
     )
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "cb_check")
-def check_subscription(call: types.CallbackQuery) -> None:
-    # Acknowledge the callback before performing the Telegram API request.
-    bot.answer_callback_query(call.id)
+def check_subscription(call: types.CallbackQuery):
     user_id = call.from_user.id
 
     try:
         member = bot.get_chat_member(CHANNEL_USERNAME, user_id)
-        if member.status in {"member", "administrator", "creator"}:
+        if member.status in ["member", "administrator", "creator"]:
+            bot.answer_callback_query(call.id, text="Verified!")
             bot.send_message(
                 call.message.chat.id,
                 "✅ <b>Verification successful!</b>\n\n"
@@ -75,7 +72,7 @@ def check_subscription(call: types.CallbackQuery) -> None:
         else:
             bot.answer_callback_query(
                 call.id,
-                "You haven't joined the channel yet.",
+                text="Don't be too smart! Quietly join the channel first, then click on Verify.",
                 show_alert=True,
             )
     except Exception:
@@ -83,7 +80,7 @@ def check_subscription(call: types.CallbackQuery) -> None:
         try:
             bot.answer_callback_query(
                 call.id,
-                "Unable to verify your membership. Please try again.",
+                text="Unable to verify your membership. Please try again.",
                 show_alert=True,
             )
         except Exception:
@@ -92,9 +89,10 @@ def check_subscription(call: types.CallbackQuery) -> None:
 
 if __name__ == "__main__":
     threading.Thread(target=run_keep_alive_server, daemon=True).start()
-    print(f"Starting Telegram bot with keep-alive server on port {PORT}...")
+    print("Starting Telegram bot with keep-alive server on port...")
     try:
         bot.infinity_polling(none_stop=True, interval=0, timeout=20)
     except Exception:
         traceback.print_exc()
         raise
+        
