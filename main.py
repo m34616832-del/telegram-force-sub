@@ -8,9 +8,11 @@ import telebot
 from telebot import types
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
-CHANNEL_USERNAME = "@LearnEnglish"
-CHANNEL_LINK = "https://t.me/LearnEnglish"
-EXCLUSIVE_CONTENT_LINK = "https://t.me/+F7NSsFp2Q4wMnRl"
+
+# आपके सही लिंक्स और यूजरनेम
+CHANNEL_USERNAME = "@LearnEnglilsh"
+CHANNEL_LINK = "https://t.me/LearnEnglilsh"
+EXCLUSIVE_CONTENT_LINK = "https://t.me/+AhUcjvhyGN1mMDI1"
 
 PORT = int(os.getenv("PORT", "8080"))
 
@@ -27,7 +29,7 @@ def health_check():
 
 
 def run_keep_alive_server():
-    """Run Flask in the background so the process remains reachable."""
+    """Run Flask in the background so process remains alive on Render."""
     app.run(host="0.0.0.0", port=PORT, debug=False, use_reloader=False)
 
 
@@ -80,7 +82,7 @@ def check_subscription(call: types.CallbackQuery):
         try:
             bot.answer_callback_query(
                 call.id,
-                text="Unable to verify your membership. Please try again.",
+                text="Don't be too smart! Quietly join the channel first, then click on Verify.",
                 show_alert=True,
             )
         except Exception:
@@ -89,10 +91,9 @@ def check_subscription(call: types.CallbackQuery):
 
 if __name__ == "__main__":
     threading.Thread(target=run_keep_alive_server, daemon=True).start()
-    print("Starting Telegram bot with keep-alive server on port...")
+    print("Starting Telegram bot with keep-alive server...")
     try:
         bot.infinity_polling(none_stop=True, interval=0, timeout=20)
     except Exception:
         traceback.print_exc()
         raise
-        
